@@ -1,0 +1,925 @@
+\documentclass[11pt]{article}
+\def\nterm {Autumn}
+\def\nyear {2022}
+\def\nlecturer {K. Buzzard, M. Lawn, S. Brzezicki}
+\def\ncourse {Introduction to University Mathematics}
+\def\nshort {Introduction to Mathematics}
+\input{../header.tex}
+
+\begin{document}
+\maketitle{}
+\tableofcontents{}
+\pagebreak
+
+%=========================================================
+\section{Set and Maps}
+\subsection{Logic and Set}
+
+Set theory was founded by a single paper in 1874 by Georg Cantor: ``On a Property of the Collection of All Real Algebraic Numbers". The theory during the early stage go under the name of naive set theory. It is lated formulated axiomatic after the discoveries of a few paradox within it. Set theory is part of mathematical logic.
+
+We denote \(\lnot\) for not, \(\land\) for and, \(\lor\) for or, \(\implies\) for imply. Here are their truth table.
+
+\begin{table}[h]
+  \begin{tabular}{c|c|c|c|c}
+    \(P\) & \(Q\) & \(P\land Q\)& \(P\lor Q\)& \(P\implies Q\) \\
+    \hline
+    T & T & T & T & T \\
+    T & F & F & T & F \\
+    F & T & F & T & T \\
+    F & F & F & F & T \\
+  \end{tabular}
+\end{table}
+
+We also denote the quantifier ``there exists'' as \(\exists\) and ``for all'' as \(\forall\).
+
+\begin{proposition}[Common laws of logic]
+  These can all be proved by writing out truth tables
+  \begin{itemize}
+    \item (law of the excluded middle) \(\lnot (\lnot P) \iff P\)
+    \item (De Morgan's law) \(\lnot (P \land Q) \iff \lnot P \lor \lnot Q\),  \(\lnot (P \lor Q) \iff \lnot P \land \lnot Q\)
+    \item (contrapositive) \((P \implies Q) \iff (\lnot Q \implies \lnot P)\)
+    \item (distributive) \(P \land (Q \lor R) \iff (P \lor Q) \land (P \lor R)\);\\ \(P \lor (Q \land R) \iff (P \land Q) \lor (P \land R)\)
+  \end{itemize}
+\end{proposition}
+Similar laws applied to set operations, with \(\lor \to \cup, \land \to \cap, \lnot \to \overline{X}\). Prove by considering an arbitrary element in set and use laws above/truth table.
+
+\vspace{5pt}Empty set rule of thumb: \(\forall x \in \emptyset, ...\) is true because there is no counter-example, whereas \(\exists x \in \emptyset, ...\) is false as there is no element in \(\emptyset\).
+
+\vspace{5pt}Here are some common negation: \(\lnot \forall P \iff \exists \lnot P\), \(\lnot \exists P \iff \forall \lnot P\), \(\lnot(P \implies Q) \iff P \land \lnot Q\). We may ``distribute" \(\lnot\) across statements.
+
+\begin{definition}
+  We say \(A\) is a subset of \(B\) if \(x\in A \implies x\in B\), denoted as \(A\subseteq B\).
+
+  \vspace{5pt}We define \(A=B\) if \(A\subseteq B \land B \subseteq A\), i.e. \(x\in A \iff x\in B\).
+
+  \vspace{5pt}We say \(A\) is a proper subset if \(A \neq B\) and \(A\neq \emptyset\) the empty set.
+\end{definition}
+
+\begin{definition}[Necessary and sufficient conditions]
+  In the statement ``If \(S\), then \(N\)'' or \(S\implies N\) (where \(S,N\) are two propositions), we say \(N\) is a necessary condition for \(S\), and \(S\) is a sufficient condition for \(N\).
+\end{definition}
+Here, \(S\) is an antecedent and \(P\) a consequent. Some equivalent expression of ``If \(S\), then \(N\)'' is ``\(S\) only if \(N\)'', ``\(N\) implied by \(S\)'', ``\(N\) whenever \(S\)'' etc.
+
+\begin{extension}{Russell's paradox and ZFC axioms}
+  Russell's paradox is a set-theoretic paradox discovered by Bertrand Russell in 1901. It shows that every set theory which contains an \emph{unrestricted comprehension principle} (includes Cantor's theory) would lead to a contradiction.
+
+  \vspace{5pt}According to the unrestricted comprehension principle, for any sufficiently well-defined property, there is the set of all and only the objects that have that property. Let \(R\) be the set of all sets that are not members of themselves. If \(R\) is not a member of itself, then its definition entails that it is a member of itself; if it is a member of itself, then it is not a member of itself, since it is the set of all sets that are not members of themselves. The resulting contradiction is Russell's paradox. Formally, it is written as
+  \[\text{Let } R:=\{x:x\notin x\},\text{ then } R \in R \iff R \notin R\]
+
+  The Zermelo-Fraenkel set theory is thus developed by Ernst Zermelo and Abraham Fraenkel. This is an axiomatic formation of the set theory. Along with the axiom of choice (which is logically independent from the rest of ZF and historically quite controversial), ZFC lays the foundation for modern mathematics. 
+  
+  \vspace{5pt}The axioms of ZFC are:
+  \begin{enumerate}
+    \item Axiom of extensionality
+    \item Axiom of regularity
+    \item Axiom schema of specification
+    \item Axiom of pairing
+    \item Axiom of union
+    \item Axiom schema of replacement
+    \item Axiom of infinity
+    \item Axiom of power set
+    \item (AC) Axiom of choice
+  \end{enumerate}
+  The last axiom is needed to prove the well-ordering theorem. 
+
+  \vspace{5pt}Zermelo–Fraenkel set theory does not allow for the existence of a universal set (a set containing all sets) nor for unrestricted comprehension, thereby avoiding Russell's paradox.
+
+  \vspace{5pt}Some other paradox that are prevented includes
+  \begin{itemize}
+    \item (Cantor's paradox) Thre is no set of all cardinalities.
+    \item (Burali-Forti paradox) Constructing ``the set of all ordinal numbers" leads to a contradiction.
+  \end{itemize}
+\end{extension}
+
+%------------------------------------------------------
+\subsection{Functions}
+\begin{definition}[Injective, surjective, bijective]
+  A function \(f:X \rightarrow Y\) is 
+  \begin{itemize}
+    \item injective (one-to-one) if \(\forall a,b \in X, f(a)=f(b) \implies a=b\)
+    \item surjective (onto) if \(\forall y \in Y, \exists x \in X : f(x)=y\)
+    \item bijective if both injective and surjective
+  \end{itemize}  
+\end{definition}
+
+\begin{theorem}
+  If \(f:X \rightarrow Y\) and \(g:Y \rightarrow Z\) are in/sur/bijective, then so is their composition \(g \circ f:X \rightarrow Z\), i.e. \(g(f(x))\).
+\end{theorem}
+\begin{proof}
+  Let's consider each case separately.
+
+  \subproof{1}{Injective}
+  For all \(a,b \in X, g(f(a))=g(f(b)) \implies f(a)=f(b) \implies a = b\), by injectivity of f and g.
+
+  \subproof{2}{Surjective}
+  For an arbitrary \(z \in Z, \exists y \in Y\) such that \(g(y)=z\), by surjectivity of g. Then by surjectivity of f, there must exists a \(x \in X \text{ such that } f(x)=y\) and thus \(g(f(x))=z\), as required.
+\end{proof}
+
+\begin{exercise}
+  If \(g \circ f\) is in/surjective, is g or f \emph{necesssarily} in/surjective? 
+\end{exercise}
+\begin{solution}
+  Let's consider each case separately.
+  \begin{itemize}
+    \item \(f\) is injective. If \(f(x_1)=f(x_2)\), then \(g(f(x_1))=g(f(x_2))\), which means \(x_1=x_2\) by hypothesis.
+    \item \(g\) is surjective. Let \(z \in Z\) be arbitrary. Then there exists \(x \in X\) such that \(g(f(x))=z\) by hypothesis. Set \(y=f(x)\) gives us the result.
+    \item \(f\) is not surjective, \(g\) is not injective. A visual counterexample is
+    \[
+      \begin{tikzpicture}
+        \draw[thick] (-4,0) ellipse (0.75 and 1.5);
+        \draw[thick] (0,0) ellipse (0.75 and 1.5);
+        \draw[thick] (4,0) ellipse (0.75 and 1.5);
+        \filldraw[DarkSlateGray] (-4,0.75) circle (2pt);
+        \filldraw[DarkSlateGray] (-4,0) circle (2pt);
+        \filldraw[DarkSlateGray] (0,0.75) circle (2pt);
+        \filldraw[DarkSlateGray] (0,0) circle (2pt);
+        \filldraw[DarkSlateGray] (0,-0.75) circle (2pt);
+        \filldraw[DarkSlateGray] (4,0.75) circle (2pt);
+        \filldraw[DarkSlateGray] (4,0) circle (2pt);
+        \draw[thick, ->] (-3.75, 0.75) -- (-0.25, 0.75);
+        \draw[thick, ->] (-3.75, 0) -- (-0.25, 0);
+        \draw[thick, ->] (0.25, 0.75) -- (3.75, 0.75);
+        \draw[thick, ->] (0.25, 0) -- (3.75, 0);
+        \draw[thick, ->] (0.25, -0.75) -- (3.75, 0);
+        \node at (-4,1.8) {X};
+        \node at (0,1.8) {Y};
+        \node at (4,1.8) {Z};
+        \node at (-2,1.2) {\(f\)};
+        \node at (2,1.2) {\(g\)};
+      \end{tikzpicture}
+    \]
+  \end{itemize}
+\end{solution}
+
+\begin{definition}[Two-sided inverse]
+  For \(f: X \rightarrow Y\), we say that \(g:Y \rightarrow X\) is a \textit{two sided inverse} of \(f\) if
+  \begin{itemize}
+    \item (left-inverse) \(\forall x \in X, g(f(x))=x\), and
+    \item (right inverse) \(\forall y \in Y, f(g(y))=y\) 
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}
+  A function \(f: X \rightarrow Y\) has a two sided inverse if and only if it is a bijection.
+\end{theorem}
+\begin{proof}
+  Let's consider each ways separately.
+
+  \subproof{\(\implies\)}
+  Injective: \(\forall a,b \in X\), if \(f(a)=f(b)\), then \(g(f(a))=g(f(b))\), which by definition means \(a=b\); Surjective: for an arbitrary \(y \in Y\), since \(y=f(g(y))\), there always exists \(x=g(y) \in X\) such that \(f(x)=y\).
+
+  \subproof{\(\impliedby\)}
+  If \(f\) is a bijection, then for any \(y \in Y\), there is \textit{exactly} one \(x_1 \in X\) such that \(f(x)=y\) (surjectivity guarantee at least one and injectivity guarantee at most one). Define \(g(y)\) to be this element. It follows by definition that \(f(g(y))=y\). Then, \(f(g(f(x))) = f(x)\) by setting \(y=f(x)\). Since \(f\) is injective, we deduce \(g(f(x)) = x\). Hence \(g\) is indeed a two-sided inverse of \(f\).
+\end{proof}
+
+\begin{problem}
+  Let \(Z\) be a set. If \(f : X \to Z\) and \(g : Y \to Z\) are injective functions, we say that \(f\) is \emph{friend} with \(g\) if there is a bijection \(h : X \to Y\) such that \(f = g \circ h\). Prove that \(f\) is friends with \(f\) if and only if the range of \(f\) equals the range of \(f\). NB: range/image of \(f\) is the set \(\{z \in Z : \exists x \in X, f(x) = z\}\).
+\end{problem}
+\begin{solution}
+  We need to go both way.
+  \subproof{\(\implies\)}
+  Assume the bijection \(h\) exists. We want to show \(range(f)=range(g)\) i.e. \(z \in range(f) \iff z\in range (g)\), which is again an `if and only if' relation. Consider arbitrary \(z \in Z\):
+  \begin{itemize}
+    \item If \(z\in range(f)\), there exists \(x \in X \text{ such that } f(x)=z\), say \(x_0\). Set \(y=h(x_0)\), then \(g(y)=g(h(x_0))=f(x_0)=z\), so \(z\in range(g)\).
+    \item If \(z \in range(g)\), then exists \(y \in Y \text{ such that } g(y)=z\), say \(y_0\). Since \(h\) is a bijection, there is a two-sided inverse \(h^{-1}\). Set \(x=h^{-1}(y_0)\), then \(f(x)=g(h(x))=g(y)=z\) using the definition of two-sided inverse, so \(z \in range(f)\).
+  \end{itemize}
+  
+  \subproof{\(\impliedby\)}
+  Assume that \(range(f)=range(g)\), we want to construct a bijection \(h:X\to Y\) such that \(f = g\circ h\). Let \(x \in X\) be arbitrary. By assumption, there exists \(y \in Y \text{ such that } g(y)=f(x)\), and this \(y\) is unique due to injectivity of \(g\). We can thus define function \(h\) to be \(h(x)=y\). Now, let's prove the three properties needed for \(h\):
+  \begin{itemize}
+    \item By definition, \(g(h(x))=g(y)=f(x)\) for arbitrary \(x\) so \(f = g\circ h\).
+    \item If \(h(x_1)=h(x_2)\), then apply \(g\) both sides gives \(f(x_1)=f(x_2) \implies x_1=x_2\) due to above and injectivity of \(f\), so \(h\) is injective.
+    \item For arbitrary \(y \in Y\), we have by assumption \(g(y)=f(x)\) for some \(x \in X\). Recall \(g(h(x))=f(x)\), so \(g(h(x)) = g(y)\), i.e. \(h(x)=y\) due to injectivity of \(g\). Hence \(h\) is surjective.
+  \end{itemize}
+
+  \noindent This then completes our proof. \qed
+\end{solution}
+
+%------------------------------------------------------
+\subsection{Binary Relations}
+\begin{definition}[Properties of binary relations]
+  For \(a,b \in X\), a binary relation \(R: X^2 \rightarrow \{True, False\}\) is
+  \begin{itemize}
+    \item reflexive if \(\forall a \in X, R(a,a)\)
+    \item symmetric if \(\forall a,b \in X, R(a,b) \implies R(b,a)\)
+    \item antisymmetric if \(\forall a,b \in X, R(a,b) \land R(b,a) \implies a = b\)
+    \item transitive if \(\forall a,b,c \in X, R(a,b) \land R(b,c) \implies R(a,c)\)
+    \item total if \(\forall a,b \in X, R(a,b) \lor R(b,a)\)
+  \end{itemize}
+  Furthermore, \(R\) is 
+  \begin{itemize}
+    \item an \textit{equivalence relation} (a generalised concept of equality) if it is reflexive, symmetric, and transitive
+    \item a \textit{partial order} if it is reflexive, antisymmetric, and transitive
+    \item a \textit{total order} if it is partial order that is also total
+  \end{itemize}
+\end{definition}
+
+\begin{example}
+  Let \(X = \mathbb{Z}\) and \(R(a,b)\) be congruence modulo \(n\) (denote as \(\equiv)\), then it is
+  \begin{itemize}
+    \item reflexive as \(a-a = 0 = n \times 0\) is true
+    \item symmetric as if \(a \equiv b\), then \(a-b=-(b-a)=n \times x\) for some \(x \in \mathbb{Z}\)
+    \item not antisymmetric as \(1 \equiv (n+1)\) and \((n+1) \equiv 1\), but \(1 \neq n+1\)
+    \item transitive as if \(a \equiv b, b \equiv c\), then \(a-b=nx, b-c = ny\) for some \(x,y\), so \(a-c=n(x+y)\) is true.
+  \end{itemize}
+  so congruence modulo n is an equivalence relation.
+\end{example}
+\begin{example}
+  The relation \(\subseteq\) is a partial order and \(\leq\) is a total order.
+\end{example}
+
+\begin{problem}
+  For \(X\) a fixed set and \(\phi:X\to A\) a fucntion, we define an equivalence relation \(R_\phi\) on \(X\) as \(R_\phi(s,t) \iff \phi(s) = \phi(t)\).
+
+  We say that two surjections \(f:X\to Y\) and \(g:X\to Z\) are \emph{pals} if there exists a bijection \(h:Y\to Z\) such that \(g = h\circ f\). Prove that \(f\) and \(g\) are pals if and only if their corresponding equivalence relation \(R\) are equal, namely, \(R_f(s,t) \iff R_g(s,t), \forall s,t \in X\).
+\end{problem}
+\begin{solution}
+  Let's consider each ways separately.
+  \subproof{\(\implies\)}
+  Assume \(f\) and \(g\) are pals, so there is a bijection \(h\) such that \(g = h \circ f\). Want to show \(f(x_1)=f(x_2) \iff g(x_1)=g(x_2)\):
+  \begin{itemize}
+    \item If \(f(x_1)=f(x_2)\), then
+  \end{itemize}
+
+  \subproof{\(\impliedby\)}
+\end{solution}
+\begin{remark}
+  This question is the “dual” to the \emph{friend} problem earlier, and shows that there is some kind of duality between subsets of a set, and equivalence relations on a set. 
+\end{remark}
+
+\begin{definition}[Equivalence class]
+  Let X be a set and \(\sim\) be an equivalence relation on X. Let \(s \in X\) be an arbitrary element. Then \(cl(s)\), the equivalence class of \(s\) is the set of elements of \(X\) which \(s\) is related to. Formally,
+  \begin{equation*}
+    cl(s)= \{x \in X : s \sim x \}
+  \end{equation*}
+\end{definition}
+
+
+For the following lemmas and theorems, let \(X\) be a set and \(\sim\) an equivalence relation on \(X\). Also let \(s,t\) be two arbitrary elements in \(X\).
+
+
+\begin{lemma}
+  If \(s \sim t\), then \(cl(s) = cl(t)\). In other words, if two elements are related, they are in the same equivalence class.
+\end{lemma}
+\begin{proof}
+  Say \(x \in cl(t)\) i.e \(t \sim x\). Then by transitivity, we have \(s \sim x\) i.e. \(x \in cl(s)\), so \(cl(t) \subseteq cl(s)\). Using symmetry of equivalence relations and repeat above, we have \(cl(s) \subseteq cl(t)\) so \(cl(s)=cl(t)\) as required.
+\end{proof}
+
+\begin{lemma}
+  If \(\lnot (s \sim t)\), then \(cl(s) \cap cl(t) = \emptyset\). In other words, if two elements are not related, their classes are disjoint.
+\end{lemma}
+\begin{proof}
+  We prove the contrapositive: if \(cl(s) \cap cl(t) \neq \emptyset\), then \(s \sim t\). Let \(x \in cl(s) \land x \in cl(t)\), then \(x \sim s \land x \sim t\). In particular, \(s \sim t\). 
+\end{proof}
+
+\begin{definition}[Partition]
+  A partition of \(X\) is a set \(P\) of subsets of \(X\) such that (a) each of the subsets is non-empty, (b) distinct subsets are disjoint, and (c) their union is \(X\). 
+  
+  Alternatively, \(P\) contains subsets of \(X\) with the property that each elements of \(X\) is in \textit{exactly} one of the subsets.
+\end{definition}
+
+\begin{theorem}
+  The set of equivalence classes form a partition.
+\end{theorem}
+\begin{proof}
+  Firstly, all equivalence classes are non-empty: \(cl(x)\) contains \(x\) by definition. Since \(\forall x, x \sim x\) i.e. \(x \in cl(x)\), each elements must be in a class, meaning the union of classes is the whole set \(X\). Finally, by Lemma 2, each classes is disjoint, so we are done.
+
+  Alternatively, we can show that each \(x\) is in exactly one class. We know \(x \in cl(x)\). Suppose \(x \in cl(y)\) also. Then \(x \sim y\), which by Lemma 1, means \(cl(x) = cl(y)\). We are done.
+\end{proof}
+
+%=========================================================
+\section{Numbers}
+\subsection{Natural numbers}
+\begin{axiom}[Peano axioms]
+  The natural numbers \(\mathbb{N}\) are a set with the following properties:
+  \begin{enumerate}[label={(P\arabic*)}]
+    \item There exists a distinguished elements \(0 \in \mathbb{N}\) (set is non-empty).
+    \item There exists a map \(\nu : \mathbb{N} \rightarrow \mathbb{N}\) called the successor map.
+    \item There exists no element such that \(\nu (n) = 0\) (so the map not surjective).
+    \item The map is injective, i.e. \(\forall a,b \in \mathbb{N}, \nu (a) = \nu (b) \implies a=b\).
+    \item Let \(A \subseteq \mathbb{N}\), such that \(0 \in A\) and \(\forall n \in A, \nu (n) \in A\), then \(A=\mathbb{N}\) (principle of induction).
+  \end{enumerate}
+\end{axiom}
+Axiom 5 ensures that \(\mathbb{N}\) is the minimum set satisfying axiom 1-4. Without it, we can have a ``loop" outside of the infinite ``chain" of numbers. 
+
+\begin{definition}[Cartesian product and ordered pair]
+  For sets \(X, Y\), their Cartesian product is
+  \begin{equation*}
+    X \times Y := \{(x,y) : x \in X \land y \in Y\}
+  \end{equation*}
+  where (x,y) is an ordered pair, satisfying the property
+  \begin{equation*}
+    (x,y) = (x',y') \iff (x=x' \land y=y')
+  \end{equation*}
+\end{definition}
+
+\begin{axiom}[Axiom of recursion]
+  Let \(X\) be a set, \(x \in X\), and \(f:X \rightarrow X\). For all \(n \in \mathbb{N}\), there exists a unique function \(R:\mathbb{N} \rightarrow X\), such that
+  \begin{enumerate}
+    \item \(R(0) = x\)
+    \item \(R(\nu (n)) = f(R(n))\)
+  \end{enumerate}
+\end{axiom}
+\begin{remark}
+  Axiom of recursion is in fact equivalent to the axiom of induction when \(X=\N\) and \(f=\nu \). We may define addition and multiplication using P5 only. Here's how.
+\end{remark}
+\begin{solution}
+  % TODO Axiom of recursion equiv to P5
+\end{solution}
+
+\begin{proposition}[Definition of addition]
+  There exists a unique binary operation \(+:\N \times \N \rightarrow \N\), such that
+  \begin{enumerate}
+    \item \(\forall x \in \N, x+0=x\)
+    \item \(\forall x,y \in \N, x+\nu (y) = \nu(x+y)\)
+  \end{enumerate}
+  In fact, we see the successor map \(\nu\) is exactly the function \(x+1\).
+\end{proposition}
+\begin{proof}
+  Fisrt part follows immidiately from Axiom of Recursion by letting \(R_x(y) := x+(y)\) for each \(x\).
+
+  For the second part, we have \(x+1 = x+\nu(0) = \nu(x+0) = \nu(x)\).
+\end{proof}
+
+\begin{proposition}[Definition of multiplication]
+  There exists a unique binary operation \(\cdot: \N \rightarrow \N\) such that
+  \begin{enumerate}
+    \item \(\forall x\in \N, x \cdot 0 = 0\)
+    \item \(\forall x,y \in \N, x \cdot \nu (y) = x \cdot y + x\)
+  \end{enumerate}
+\end{proposition}
+\begin{proof}
+  Define \(R_x(y) := x\cdot (y) + x\) for each \(x\). Note we need \(R(\nu(y))=x\cdot(\nu(y))+x= f(x\cdot y +x)\) for some function \(f\), so let \(f_x(y) := (y)+x\) for each x, which would satisfy the axiom of recursion. %TODO check with tutor
+\end{proof}
+
+\begin{proposition}[Properties of addition and multiplication]
+  Let \(x,y,z \in \N\), then
+  \begin{enumerate}[label={\normalfont(A\arabic*)}]
+    \item \(x+y=y+x\)
+    \item \((x+y)+z=x+(y+z)\)
+    \item \(0+x=x+0=x\)
+  \end{enumerate}
+  \begin{enumerate}[label={\normalfont(M\arabic*)}]
+    \item \(x \cdot y = y \cdot x\)
+    \item \((x \cdot y) \cdot z = x \cdot (y \cdot z)\)
+    \item \(x \cdot 1 = 1 \cdot x = x\)
+  \end{enumerate}
+  \begin{enumerate}[label={\normalfont(D)}]
+    \item \(x \cdot (y+z) = x \cdot y + x \cdot z\)
+  \end{enumerate}
+\end{proposition}
+
+Along with additive (A4) and multiplicative inverse (M4), the above would form the field axiom, as discussed later.
+
+\begin{proof}
+  \textbf{Common strategy:} Define an appropriate subset \(S\) of \(\N\), prove that it satisfies P5, conclude \(S = \N\) (induction essentially).
+
+  We shall prove the commutativity of addition and multiplication, as these are the hardest.
+  
+  \vspace{5pt}
+  (A3): Let \(S = \{x\in \N : 0+x=x+0\}\)
+  Clearly \(0+0=0+0=0\), so \(0 \in S\). Now, if \(n \in S\) i.e. \(n+0=0+n\), then \(0+\nu(n) = \nu(0+n)=\nu(n+0) = \nu(n) = \nu(n)+0\) i.e. \(\nu(n) \in S\). So by P5 \(S = \N\).
+
+  \vspace{5pt}
+  (A1): Let \(S := \{x\in \N : x+y=y+x, \forall y \in \N\}\). We know \(0 \in S\) from (A3), so now suppose \(x \in S\), we just need to show \(\nu(x) \in S\).
+
+  To do this, we define another set \(S_{\nu(x)} := \{y\in\N:\nu(x)+y=y+\nu(x)\}\). We see that \(\nu(x) \in S\) if and only if \(S_{\nu(x)}=\N\). We prove the latter by P5.
+
+  Clearly, \(0\in S_{\nu(x)}\) due to (A3). Suppose \(y \in S_{\nu(x)}\). Then, using defintion and hypothesis (keep in mind that \(x \in S\) also), we have
+  \begin{multline*}
+    \nu(x)+\nu(y)=\nu(\nu(x)+y)=\nu(y+\nu(x))=\nu(\nu(y+x)) \\ =\nu(\nu(x+y))=\nu(x+\nu(y))=\nu(\nu(y)+x)=\nu(y)+\nu(x)
+  \end{multline*}
+  Hence \(S_{\nu(x)} = \N\) so \(\nu(x)\in S\) so \(S=\N\) by P5 as required.
+
+  \vspace{5pt}
+  (M1): The proof of this is very similar to the addition. We define \(S:=\{x\in\N:x\cdot y= y\cdot x, \forall y\in \N\}\) and for a given \(x\), \(S_x = \{y\in\N:x\cdot y = y \cdot x\}\), so that \(x \in S\) iff \(S_x=\N\).
+
+  Let's show \(0 \in S\) first. Consider \(S_0\). Clearly \(0 \cdot 0 = 0 \cdot 0 = 0\), so \(0 \in S_0\). Suppose \(y \in S_0\), then \begin{equation*}
+    0 \cdot \nu(y) = 0 \cdot y + 0 = 0 + 0 = 0 = \nu(y) \cdot 0 
+  \end{equation*}
+  so \(S_0 = \N\) so \(0 \in S\).
+
+  Now suppose \(x \in S\) and consider \(S_{\nu(x)}\). Clearly \(0 \in S_{\nu(x)}\) as \(0 \in S\). Suppose \(y \in S_{\nu(x)}\), we then have
+  \begin{multline*}
+    \nu(x) \cdot \nu(y) = \nu(x) \cdot y + \nu(x) = y \cdot \nu(x) + \nu(x) = (y \cdot x + y) + (x+1) \\ = (x \cdot y + x)+ (y+1) = x \cdot \nu(y) + \nu(y) = \nu(y) \cdot x + \nu(y) = \nu(y) \cdot \nu(x) 
+  \end{multline*}
+  so \(\nu(y) \in S_{\nu(x)}\) so \(S_{\nu(x)} = \N\) so \(\nu(x) \in S\) so \(S = \N\) as required.
+
+  \vspace{5pt}
+  (A2): We may prove this by considering \(S := \{z\in\N: (x+y)+z = x+(y+z), \forall x,y \in \N\}\). One induction is enough here.
+\end{proof}
+
+\begin{proposition}
+  Let \(x,y \in \N\), we have
+  \begin{enumerate}
+    \item \(x + y = x \implies y = 0\)
+    \item \(x + y = 0 \implies x = 0 \land y = 0\)
+    \item \(x + z = y + z \implies x = y\)
+    \item \(x \cdot z = y \cdot z, z > 0 \implies x = y\)
+  \end{enumerate}
+\end{proposition}
+
+\begin{definition}[Inequality on \(\N\)]
+  We say that \(x\) is smaller than or equal to \(y\) if \(\exists v \in \N\) such that \(y=x+v\). We denoted as \(x \leq y\).
+
+  Additionally, if \(v \neq 0\), then \(x\) is strictly smaller than \(y\), denoted as \(x < y\).
+\end{definition}
+It is trivial to show that \(\leq\) is in fact a total order on \(\N\).
+
+\begin{problem}
+  Assume all standard fact about complex number. Prove that there is no total order \(\leq\) on the complex numbers \(\C\) satisfying the properties that:
+  \begin{enumerate}
+    \item if \(0 \leq a\) and \(0 \leq b\) then \(0 \leq ab\), and
+    \item if \(a \leq b\) then for all \(t\) we have \(t + a \leq t + b\).
+  \end{enumerate}
+\end{problem}
+\begin{solution}
+  % TODO P1-Pset 3-Q5
+\end{solution}
+
+\begin{proposition}[Well-ordering principle]
+  Every non-empty set \(A \subseteq \N\) has a least element i.e. \(\exists x \in A\) such that \(x \leq a, \forall a \in A\).
+\end{proposition}
+\begin{proof}
+  Suppose there exists a non-empty set \(A \subseteq \N\) with no least element. Then define
+  \begin{equation*}
+    B:= \{n \in \N : x\leq b \implies x \notin A\}
+  \end{equation*}
+  (all elements in \(B\) is smaller than those in \(A\)). We want to show that \(A = \emptyset\), so we induct on b.
+
+  Firstly, \(0+x=x+0=x \forall x \in \N \implies 0\leq x \forall x \in A \subseteq \N \implies 0 \notin A \implies 0 \in B\).
+
+  Then, assume \(n \in B\), so \(1,2,...,n \notin A\). Assume \(\nu(n)=n+1 \in A\), but then \(n+1\) is a least element in \(A\), so by definition \(\nu(n) \notin A \implies \nu(n) \in B\). This completes our induction.
+\end{proof}
+
+\textbf{Common well-ordering proof:} define set of counterexample \(A = \{n \in \N: \lnot P(n)\}\). Assume \(A \neq \emptyset\) i.e. \(A\) has a least element \(l\). Then arrives at a contradiction e.g. \(\exists a \in A, a < l\). Conclude \(A = \emptyset\) and so \(P(n),  \forall n \in \N\).
+
+\begin{example}
+  Show that all \(n \in \N \ \{0,1\}\) can be factored as a product of primes.
+\end{example}
+\begin{proof}
+  Define \(A = \{n\in \N \ \{0,1\}: \text{n not product of primes}\}\). Assume \(A \neq \emptyset\), so by the well-ordering principle there is a least element \(l \in A\). 
+  
+  Then if \(l\) is prime, \(l \notin A\), contradiction. So \(l\) is composite i.e. \(l=a \cdot b\) where \(a,b \in N\) and \(1 < a,b < l\). Since \(l\) is the least element, \(a,b \notin A\). Hence \(a,b\) can be factored as product of prime, which then implies \(l\) is a product of prime, contradiction. 
+
+  Hence \(A = \emptyset\), so the statement is true.
+\end{proof}
+
+\begin{proposition}[Principles of (strong) induction]
+  For all \(n \in \N\), let \(P(n)\) be a proposition depending on the number \(n\). If 
+  \begin{enumerate}
+    \item \(P(n_0)\) is true for some \(n_0 \in \N\), and
+    \item For arbitrary \(n \geq n_0\), either
+    \begin{enumerate}[label*=\arabic*.]
+      \item (weak induction) \(P(n)\) is true implies \(P(n+1)\) is true, or
+      \item (strong induction) \(P(k)\) is true for \(n_0 \leq k \leq n\) implies \(P(n+1)\) is true,
+    \end{enumerate}
+  \end{enumerate}
+  then \(P(n)\) is true for all \(n \geq n_0\).
+\end{proposition}
+\begin{proof}
+  % TODO Induction proof
+\end{proof}
+
+%----------------------------------------------------
+\subsection{Integers}
+
+We now extend the natural number to integers by introducing subtraction, defined using the concept of equivalence class.
+
+\begin{proposition}[Subtraction]
+  The following binary relation on \(\N \times \N\) is an equivalence relation.
+  \begin{equation*}
+    (a,b) \sim (c,d) \iff a+d=b+c
+  \end{equation*}
+  We denote 
+  \begin{equation*}
+    a-b := cl((a,b)) = \{(x,y)\in \N^2 : (x,y) \sim (a,b)\}
+  \end{equation*}
+\end{proposition}
+
+You should check the properties of addition and multiplication in natural numbers are still satisfied
+
+\begin{definition}[Integer]
+  Integer \(\Z\) is the set of all equivalence classes \(a-b\).
+  Define Addition: \((a,b)+(c,d) := (a+c,b+d)\) and Multiplication: \((a,b) \cdot (c,d) := (ac+bd, ad+bc)\)
+\end{definition} %TODO refine wording subtraction
+
+\begin{definition}[Divisibility]
+  For \(n,m \in \Z\), we say \(m|n \iff \exists k \in \Z, n = k \cdot m\). Further more, for \(a,b \in \Z\), we say
+  \begin{itemize}
+    \item \(gcd(a,b)\) is the largest \(n \in \Z\) such that \(n|a \land n|b\)
+    \item \(lcd(a,b)\) is the loweset \(n \in \Z\) such that \(n=k \land n = lb\) for some \(k,l \in \Z\)
+  \end{itemize}
+\end{definition}
+
+\begin{problem}
+  Show that divisibility \(R(x,y) = x | y\) is a partial order on \(\N\). Is it a total order?
+\end{problem}
+\begin{solution}
+  % TODO P2-Pset 1-Q6
+\end{solution}
+
+\begin{proposition}
+  If \(a=bq+r\) for some \(q,r \in \Z\), then \(gcd(a,b) = gcd(r,b)\).
+\end{proposition}
+
+\begin{theorem}[Quotient-Remainder Theorem]
+  Let \(a,b \in \Z, b>0\). There exists unique integers \(q\) and \(r\) such that 
+  \begin{equation*}
+    a = qb+r, 0 \leq r < b
+  \end{equation*}
+\end{theorem}
+\begin{proof} 
+  Define \(S = \{r \in \N : r=a-bq, q\in \Z\}\). 
+
+  Show \(S\) is non-empty: If \(a \geq 0\), then choose \(q=0\) shows \(\exists r \in S\). If \(a < 0\), then choose \(q=a\) gives \(r = a-b \cdot a = (b-1)\cdot (-a) \geq 0\) so \(\exists r \in S\).
+
+  By well-ordering principle, \(S\) has a least element \(r \) such that \(r=a-qb\) and \(r > 0\).
+
+  Now want to show \(r < b\). Suppose \(r \geq b \iff r - b \geq 0\). But now \(r > r-b = a - bq - b = a - b(q+1) \in S\), contradicts with WOP.
+  
+  %TODO prove QRT
+\end{proof}
+
+\begin{algorithm}
+  The Euclidean algorithm for finding the greatest commond divisor:
+  \begin{enumerate}
+    \item Start with \(gcd(a,b)\)
+    \item By Q-R theorem, \(a = bq_1 + r_1\) for some \(q_1 \in \Z, 0 \leq r_1 < b\)
+    \item By proposition, \(gcd(a,b)=gcd(b,r_1)\)
+    \item Repeat, \(b = r_1q_2+r_2\) for some \(q_2\).
+    \item Iterate. Since \(b>r_1>r_2>...>0\), eventually
+  \end{enumerate}
+\end{algorithm}
+
+\begin{theorem}
+  Let \(a,b \in \Z - \{0\}\). Then there exists \(x,y \in \Z\) such that \(ax+by=gcd(a,b)\)
+\end{theorem}
+\begin{proof}
+  WOP: Define \(S=\{ n \in \N : n=ax+by >0 , x,y \in \Z \}\).
+  Non-empty.
+  least element \(d_0\) exists
+  use Q-R theorem to show d|a and d|b. Then plug \(d_0\) in a = dq+r, contradict if r >0. so r = 0 i.e. is divisor
+  Show it's the greatest the one
+\end{proof}
+\begin{corollary}
+  Let \(a,b \in \Z\). If \(n|ab\) and \(gcd(n,a)=1,\) then \(n|b\).
+\end{corollary}
+
+% TODO Primes
+
+\begin{theorem}[Fundamental Theorem of Arithmetic]
+Hih
+\end{theorem}
+\begin{proof}
+  Proof of uniqueness.
+  Suppose there are two distinct prime factorisation
+\end{proof}
+
+\begin{theorem}
+  infinitely many primes
+\end{theorem}
+\begin{proof}
+  
+\end{proof}
+
+\begin{definition}[Congruence modulo \(n\)]
+  For \(a,b \in \Z\), we have \(a \equiv b \text{ mod } n \iff n|(a-b)\). This is an equivalence relation as shown in section 1.
+  We denote its equivalence class by
+  \begin{equation*}
+    [a]_n := \{b \in \Z : b \equiv a \text{ mod } n\}
+  \end{equation*}
+\end{definition}
+
+We can prove that \(a \equiv b \text{ mod } n\) if and only if \(a=nq+b\) for some \(q \in \Z\) if and only if \(a,b\) has the same remainder after divsion by \(n\). The usual rules then follows.
+
+\begin{proposition}[Modular arithmetics]
+  \begin{itemize}
+    \item 
+  \end{itemize}
+\end{proposition}
+
+% TODO Bezout's lemma, euclids's lemma, multiplicative inverse, others
+
+\begin{proposition}[Addition and multiplication on residue class]
+  If \([a]=[a'], [b]=[b']\), then
+  \begin{itemize}
+    \item \([a+b] = [a'+b']\)
+    \item \([ab] = [a'b']\)
+  \end{itemize}
+\end{proposition}
+
+% TODO FLT, Euler Totient function, Wilson theorem. 
+
+%----------------------------------------------------
+\subsection{Real numbers}
+
+\begin{definition}[Division and Rationals]
+  Let \((a,b), (c,d) \in \Z \times \Z - \{0\}\) and consider the following equivalence relation (which you should prove):
+  \begin{equation*}
+    (a,b) \sim (c,d) \iff ad = bc
+  \end{equation*}
+  Define \(\frac{a}{b} := cl((a,b))\), then \(\Q\) is the set of all equivalence classes \(\frac{a}{b}\).
+\end{definition}
+
+Just like how we define subtraction for the integers, we propose the operation \(+_\Q\) and \(\cdot_\Q\) as how we expect them to behave. But to prove it, we need to show that they are compatible with the equivalence relation, namely:
+\begin{proposition}
+  If \((a,b) \sim (a',b')\) and \((c,d) \sim (c',d')\), then 
+  \begin{align*}
+    cl(a,b) +_\Q cl(c,d) &= cl(a',b') +_\Q cl(c',d') \\
+    cl(a,b) \cdot_\Q cl(c,d) &= cl(a',b') \cdot_\Q cl(c',d')
+  \end{align*}
+\end{proposition}
+\begin{proof}
+  Similar to that for subtraction and congruence.
+\end{proof}
+
+We want the rationals to be an extension of the integers, so it is important to show that \(\Z \subset \Q\). We do this by showing the following map is injective:
+\[i:\Z \to \Q, n \mapsto i(n) = \frac{n}{1}\]
+\begin{proof}
+  Exercise.
+\end{proof}
+
+\begin{axiom}[Field axioms]
+  A field is a set \(\mathbb{F}\) along with two binary operations \((+, \cdot\)) such that for each operations: they are commutative, associative, identity and inverse element exists. The two operations are also distributive.
+\end{axiom}
+
+\begin{exercise}[\(\Z_p\) is a field]
+  Show that for prime \(p\), the set of residue class \[\Z/p\Z = \{[a]_0, [a]_1,...,[a]_{p-1}\}\] with the operation \((+,\cdot)\) as defined previously, is in fact a field.
+\end{exercise}
+\begin{solution}
+  % TODO Z_p is a field
+\end{solution}
+
+\begin{axiom}[Ordered field]
+  An ordered field is a field together with a total order \(\leq\) such that if \(x \leq y\), then
+  \begin{enumerate}[label={(O\arabic*)}]
+    \item \(x+z \leq y+z\)
+    \item \(xz \leq yz, z > 0\)
+  \end{enumerate}
+\end{axiom}
+
+We have a lot of axioms so far already, but it is still not enough to define \(\R\) uniquely. \(\Q\) for instance, also satisfies these axioms. We need to introduce one last axiom.
+
+\begin{definition}[Upper bound]
+  A non-empty set \(S\) is bounded above if \(\exists B \text{ such that } \forall x \in S, x \leq B\). Note that this \(B\) does not need to be in \(S\).
+
+  Any such \(B\) is called an upper bound of \(S\).
+\end{definition}
+\begin{definition}[Supremum]
+  We call \(\alpha\) a least upper bound or supremum of \(S\) if
+  \begin{enumerate}
+    \item \(\alpha\) is an upper bound of \(S\)
+    \item if \(B<\alpha\) then \(B\) is not an upper bound of \(S\)
+  \end{enumerate} 
+  We denote this as \(\alpha = \text{sup } S\)
+\end{definition}
+The definition is similar for lower bound and infimum.
+
+\begin{axiom}[Axiom of completeness]
+  A complete ordered field is an ordered field \(\mathbb{F}\) such that if a nonempty subset \(S\) has an upper bound, then \(S\) has a supremum which lies in \(\mathbb{F}\).
+\end{axiom}
+
+\begin{exercise}
+  The axiom of completeness is equivalent when replace upper bound with lower bound.
+\end{exercise}
+\begin{solution}
+
+\end{solution}
+
+\begin{theorem}
+  The field of real numbers \(\R\) is the only complete ordered field. 
+\end{theorem}
+\begin{proof}
+  
+\end{proof}
+
+\begin{proposition}[Archimedean property]
+  For all \(x,y \in \R, x>0\), there exists an \(n \in \N\) such that \(nx > y\).
+\end{proposition}
+\begin{proof}
+  %TODO P2-Pset 3-Q5b
+\end{proof}
+
+\begin{proposition}[\(\Q\) is dense in \(\R\)]
+  For all \(x,y \in \R, x<y\), there exists a number \(r\in \Q\) such that \(x<r<y\).
+\end{proposition}
+\begin{proof}
+  
+\end{proof}
+
+%=========================================================
+\section{Vectors}
+\subsection{Algebra}
+\begin{definition}[Dot Product, angle, and length of vectors]
+  For two vectors \(\mathbf{u}, \mathbf{v} \in \mathbb{R}^n\), their Euclideam inner product (dot/scalar product) is defined as
+  \begin{equation*}
+    \mathbf{u} \cdot \mathbf{v} = \sum_{i=1}^{n} u_i v_i
+  \end{equation*}
+  The angle between them is \textit{defined} as 
+  \begin{equation*}
+    \theta = cos^-1(\frac{\mathbf{u} \cdot \mathbf{v}}{|\mathbf{u}||\mathbf{v}|})
+  \end{equation*}
+  where \[|\bf{u}| = \sqrt[]{\bf{u} \cdot \bf{u}} = \sum_{i=1}^{n} \sqrt[]{u_{i}^{2}}\] is the magnitude of \(\bf{u}\).
+
+  \noindent We also define the oriented angle \(\widehat{(\bf{u},\bf{v})}\) as positive if we go anticlockwise from \(\bf{u}\) to \(\bf{v}\), and vice versa.
+\end{definition}
+
+\begin{proposition}[Cauchy-Schwarz inequality]
+  
+\end{proposition}
+\begin{proof}
+  % P3-Ps1-Q6
+\end{proof}
+
+\begin{proposition}[Triagnle inequality]
+  
+\end{proposition}
+\begin{proof}
+  
+\end{proof}
+
+\begin{proposition}[Projection]
+  
+\end{proposition}
+
+\begin{definition}[Determinant of two vectors]
+  
+\end{definition}
+
+\begin{definition}[Vector product]
+  
+\end{definition}
+
+\begin{problem}
+  Can you show that the vector product does not exist in \(\R^4\)?
+\end{problem}
+\begin{solution}
+  %TODO P3-Ps2-Q16
+\end{solution}
+
+The dot product is something we called a \textbf{symmetric bilinear form}, as it is symmetric and linear in both arguments. Vector product on the other hand, is an antisymmetric bilinear form. The proof of these is left to the reader.
+
+Next, we introduce some useful products to know.
+
+\begin{definition}
+  Scalar Triple Product is defined by   
+
+\end{definition}
+
+%----------------------------------------------------
+\subsection{Geometry}
+\begin{definition}[Basis]
+  We say that \(\bf{u}_1,\bf{u}_2,...,\bf{u}_n\) forms a basis in \(\R^n\) if it is spanning, namely, for all vector \(\bf{v} \in \R^n\), there exists a \emph{unique} set of real numbers \(\lambda_1, \lambda_2,..., \lambda_n\) such that
+  \begin{equation*}
+    \bf{v} = \sum_{i=-1}^n \lambda_i\bf{u}_i
+  \end{equation*}
+  Furthermore, the basis are orthonormal if 
+  \begin{equation*}
+    \bf{u}_i \cdot \bf{j} = \delta_{ij} = 
+    \begin{cases}
+      1, & i = j \\ 0, & i\neq j
+    \end{cases}
+  \end{equation*}
+  where \(\delta_{ij}\) is the Kronecker delta.
+\end{definition}
+
+We can then define the familiar Cartesian frame (two orthonormal basis vectors and an origin). I will skip this as it is well-known. Note the conventional basis is right-handed.
+
+\begin{definition}[Polar coordiantes]
+  % inner product iff orthonormal
+\end{definition}
+
+\begin{proposition}[Affix]
+  
+\end{proposition}
+
+\begin{problem}
+  % TODO P3-Ps1-Q12
+\end{problem}
+
+\begin{definition}[Spherical coordiantes]
+  
+\end{definition}
+
+\begin{definition}[Cylindrical coordiantes]
+  
+\end{definition}
+
+There are now some usual A-level 3d geometry that I cannot be bothered to write.
+
+%----------------------------------------------------
+\subsection{Space Curves}
+
+This section looks at curves in space defined by vector functions. Vector calculus can be extended from single variable calculus easily, by treating it component wise.
+
+\begin{definition}[Continuity]
+  A vector function \(\bf{r}\) is continuous at a if
+  \begin{equation*}
+    \lim_{t\to a} \bf{r}(t) = \bf{r}(a)
+  \end{equation*}
+\end{definition}
+
+\begin{theorem}[Differentiation rules]
+  The usual rules of differentiation continue to work: add, scalar mult, product rule (for dot, cross, and multiplication with a real value function), and chain rule \(\diff{}{t} \bf{u} (f(t)) = f'(t) \bf{u}' (f(t))\).
+\end{theorem}
+
+\begin{lemma}
+  If \(|\bf{r}(t)| = c, c\in \R\), then \(\bf{r}'(t)\) is orthogonal to \(\bf{r}(t), \forall t\).
+\end{lemma}
+\begin{proof}
+  We have \(\bf{r}(t) \cdot \bf{r}(t) = |\bf{r}(t)|^2 = c^2\) so \(\diff{}{t} \bf{r}(t) \cdot \bf{r}(t) = \bf{r}'(t) \cdot \bf{r}(t) + \bf{r}(t) \cdot \bf{r}'(t) = 0\) so \(\bf{r}(t) \cdot \bf{r}'(t) = 0, \forall t\). Geometrically, this means that if the curve lies on a sphere centre origin, then the tangent vector is always perpendicular to the postion vector.
+\end{proof}
+
+\begin{definition}[Arc length]
+  The arc length function of the curve traversed from \( t=a\) is defined by
+  \begin{equation*}
+    L = s(t) = \int_a^t |\bf{r}'(u)| \,du = \int_a^t \sqrt[]{(\diff{x}{u})^2 + (\diff{y}{u})^2 + (\diff{z}{u})^2} \,du
+  \end{equation*}
+  so by the fundamental theorem of calculus we have
+  \begin{equation*}
+    \diff{s}{t} = |\bf{r}'(t)|
+  \end{equation*}
+  Parametisation of curve using arc length \(s\) rather than \(t\) leads to development of intrinsic coordiantes, which is often more useful.
+\end{definition}
+
+\begin{definition}[Smooth]
+  A curve \(\bf{r}(t)\) is smooth if \(\bf{r}'(t) \neq 0\) and is continuous for all \(t\), i.e. it has no sharp corners or cusps.
+\end{definition}
+
+\begin{definition}[Unit tangent vector and Curvature]
+  The unit tangent vector is denoted as
+  \begin{equation*}
+    \bf{T}(t) = \frac{\bf{r}'(t)}{|\bf{r}'(t)|}
+  \end{equation*}
+  The curvature, a measure of how quickly the curve changes direction, is defined by
+  \begin{equation*}
+    \kappa = \left|\diff{\bf{T}}{s}\right|
+  \end{equation*}
+\end{definition}
+
+\begin{theorem}
+  The curvature can be written as 
+  \[\kappa(t) = \frac{|\bf{r}'(t) \times \bf{r}''(t)|}{|\bf{r}'(t)|^3}\]
+\end{theorem}
+\begin{proof}
+  Firstly, using chain rule to express it as a function of \(t\),
+  \begin{equation*}
+    \diff{\bf{T}}{t} = \diff{\bf{T}}{s} \diff{s}{t}
+  \end{equation*}
+  which gives
+  \begin{equation*}
+    \kappa(t) = \frac{|\bf{T}'(t)|}{|\bf{r}'(t)|}
+  \end{equation*}
+
+  By defintion of unit tangent vector, \(\bf{r}'(t)=\bf{T}(t) \diff{s}{t}\), so differentiate gives
+  \begin{equation*}
+    \bf{r}''(t) = \bf{T}'(t) \diff{s}{t} + \bf{T}(t) \diff[2]{s}{t}
+  \end{equation*}
+  Then, 
+  \begin{align*}
+    |\bf{r}'(t) \times \bf{r}''(t)| 
+    &= (\diff{s}{t})^2 |\bf{T}(t) \times \bf{T}'(t)| \\
+    &= |\bf{r}'(t)|^2 (|\bf{T}'(t)||\bf{T}(t)| |\sin(\frac{\pi}{2})|) \\
+    &= |\bf{r}'(t)|^2 |\bf{T}'(t)|
+  \end{align*}
+  because \(\bf{T}(t)\times \bf{T}(t) = 0\), \(\bf{T}(t)\) is unit vector, and \(\bf{T}(t) \cdot \bf{T}'(t) = 0\) from lemma.
+  The result then follows from substituting back.
+\end{proof}
+
+\begin{definition}[Normal Vector and Binoraml Vector]
+  The (principal) unit normal vector is
+  \begin{equation*}
+    \bf{N}(t) = \frac{\bf{T}'(t)}{|\bf{T}'(t)|}
+  \end{equation*}
+  and the binormal vector is defined by
+  \begin{equation*}
+    \bf{B}(t) = \bf{T}(t) \times \bf{N}(t)
+  \end{equation*}
+  such that \(\{\bf{T}(t),\bf{N}(t),\bf{B}(t)\}\) forms a right-handed orthonormal basis.
+
+  Furthermore, the plane at a point \(P\) on curve \(\mathcal{C}\) is called a
+  \begin{itemize}
+    \item normal plane if it contains \(\bf{N}, \bf{B}\)
+    \item osculating plane if it contains \(\bf{T}, \bf{N}\)
+  \end{itemize}
+\end{definition}
+
+\begin{exercise}[Frenet-Serret formulas]
+  In differential geometry, the Frenet-Serret formulas describe the kinematic properties of a particle moving along a differentiable curve in \(\R^3\):
+  \begin{equation*}
+    \begin{cases}
+      \diff{\bf{T}}{s} = \kappa\bf{N} \\[10pt]
+      \diff{\bf{N}}{s} = -\kappa\bf{T} + \tau\bf{B} \\[10pt]
+      \diff{\bf{B}}{s} = \tau\bf{N}
+    \end{cases}
+  \end{equation*}
+  where \(\kappa\) is the curvaure as defined above and \(\tau\) is the torsion of the curve, which measures the degree of twisting of the curve. Give a proof of this.
+\end{exercise}
+\begin{solution}
+  % TODO Frenet-Serret Ps3-Q16
+\end{solution}
+
+% TODO Kinematics in polar, Ps3-Q19 20
+
+\end{document}

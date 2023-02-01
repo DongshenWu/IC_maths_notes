@@ -1,0 +1,746 @@
+\documentclass[11pt]{article}
+\def\nterm {}
+\def\nyear {2022 - 2023}
+\def\nlecturer {C. Kestner, M. Zordan}
+\def\ncourse {Linear Algebra and Group}
+\def\nshort {Linear Algebra and Group}
+\input{../header.tex}
+
+\begin{document}
+\maketitle{}
+\tableofcontents{}
+\pagebreak
+
+%=========================================================
+\part{Linear Algebra}
+\section{Linear Systems and Matrices}
+\subsection{Matrix Algebra}
+We start by introducing the concept of matrix and some of its operation.
+
+\begin{definition}[Matrix representation of linear systems]
+  Given a linear systems of \(m\) equations with \(n\) unknowns, we can write in matrix forms as
+  \begin{equation*}
+    \bf{A}\bf{x}=\bf{b}
+  \end{equation*}
+  where \(\bf{A}\) is a \(m \times n\) matrix, \(\bf{x}\) is the column vector of unknowns, and \(\bf{b}\) a column vector of size \(n\).
+  This can be represented in an \emph{Augmented Matrix} as:
+  \begin{equation*}
+    \begin{amatrix}{4}
+      a_{11} & a_{12} & \cdots & a_{1n} & b_{1} \\
+      a_{21} & a_{22} & \cdots & a_{2n} & b_{2} \\
+      \vdots & \vdots & \ddots & \vdots & \vdots \\ 
+      a_{m1} & a_{m2} & \cdots & a_{1n} & b_{m}
+    \end{amatrix}
+  \end{equation*}
+\end{definition}
+
+\begin{definition}[Matrix addition and scalar multiplication]
+  Given \(m \times n\) matrix \(\bf{A}=[a_{ij}]\) and \(\bf{B}=[b_{ij}]\), and a scalar \(\lambda \in \R\), we have
+  \begin{itemize}
+    \item \(\bf{A} + \bf{B} = \bf{C} = [c_{ij}] = [a_{ij}+b_{ij}]\)
+    \item \(\lambda \bf{A} = [\lambda a_{ij}]\)
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[Matrix multiplication]
+  Let \(\bf{A} = [a_{ij}]_{p\times q}\) and \(\bf{B} = [b_{ij}]_{q\times r}\). Then the matrix product is given by \(\bf{A}\bf{B}=\bf{C}=[c_{ij}]_{p\times r}\), where
+  \begin{equation*}
+    c_{ij} = \sum_{k=1}^{q} a_{ik}b_{kj}
+  \end{equation*}
+\end{definition}
+We are essentially dotting the \(i\)th row in \(A\) with the \(j\)th column in \(B\) to get the entry in \(C\) at row \(i\) column \(j\).
+
+\begin{theorem}[Associativity of matrix multiplication]
+  Let \(\bf{A}, \bf{B}, \bf{C}\) be \(p\times q, q\times r, r \times s\) matrix respectively, then
+  \begin{equation*}
+    (\bf{A}\bf{B})\bf{C} = \bf{A}(\bf{B}\bf{C})
+  \end{equation*}
+\end{theorem}
+\begin{proof}
+  \begin{align*}
+    [A(BC)]_{ij} &= \sum_{k=1}^q a_{ik}[BC]_{kj} \\
+    &= \sum_{k=1}^{q} a_{ik} \sum_{t=1}^r b_{kt}c_{tj} \\
+    &= \sum_{k=1}^q \sum_{t=1}^r a_{ik}(b_{kt}c_{tj}) &&\text{distributive} \\
+    &= \sum_{k=1}^q \sum_{t=1}^r (a_{ik}b_{kt})c_{tj} &&\text{associative} \\
+    &= \sum_{t=1}^r \sum_{k=1}^q (a_{ik}b_{kt})c_{tj} \\
+    &= \sum_{t=1}^r (\sum_{k=1}^q a_{ik}b_{kt}) c_{tj} \\
+    &= \sum_{t=1}^r [AB]_{it}c_{tj} \\
+    &= [(AB)C]_{ij}
+  \end{align*}
+\end{proof}
+It is easy to check that matrix multiplication is \emph{not} commutative. 
+
+For ease of note-taking, I shall ignore the upright boldface convention for denoting matrix, and call the \(ij\)th entry for entry at row \(i\) column \(j\).
+
+%----------------------------------------------------
+\subsection{Row Operations}
+\begin{definition}[Elementary row operations]
+  There are three elementary row operations that we can perform on an augmented matrix without changing the system:
+  \begin{enumerate}
+    \item \emph{Swap} two rows
+    \item \emph{Add} a row to another
+    \item \emph{Multiply} a row by any non-zero number
+  \end{enumerate}
+\end{definition}
+
+\begin{definition}[Row-equivalence]
+  Two matrix \(A,B\) are row-equivalent if we can can transform one to the other using elementary row operations.
+\end{definition}
+
+\begin{definition}[Equivalence]
+  Two linear systems are \emph{equivalent} (i.e has the same set of solutions) if either:
+  \begin{itemize}
+    \item they are both inconsistent (so solution set is the empty set)
+    \item their augmented matrices are row-equivalent.
+  \end{itemize}
+\end{definition}
+
+\begin{problem}
+  It turns out that both the bullet point are necessary for the definition. In other words, given any two inconsistent matrices, we cannot guaranteed that they can be transformed from one to another using elementary row operations.
+
+  Give an example, and find when two inconsistent matrix can be transformed from to another using elementary row operations.
+\end{problem}
+\begin{solution}
+  A simple counter example could be
+  \begin{align*}
+    &\begin{amatrix}{2}
+      1 & 0 & 0 \\
+      0 & 0 & 1
+    \end{amatrix} & and &
+    &\begin{amatrix}{2}
+      0 & 0 & 0 \\
+      0 & 0 & 1
+    \end{amatrix}
+  \end{align*}
+
+  More generally, I claim that two inconsistent augmented matrices must be able to be transformed into the same reduced row echelon form using elementary row operations.
+  % ASK 
+\end{solution}
+
+\begin{definition}[Echelon form]
+  We say a matrix is in \emph{row echelon form} if:
+  \begin{itemize}
+    \item all of the zero rows are at the bottom
+    \item all entries are zero are below the first non-zero entry in a column
+    \item the first non-zero entry in row \(i\) is strictly to the left of the first non-zero entry in row \(i+1\) 
+  \end{itemize}
+  It is a \emph{reduced row echelon form (RREF)} if it also satisfies:
+  \begin{itemize}
+    \item the first non-zero coefficient is 1
+    \item each column contains a leading 1 has zeros in all other entries.
+  \end{itemize}
+\end{definition}
+
+%----------------------------------------------------
+\subsection{Special Matrices}
+\begin{definition}[Elementary matrix]
+  Any matrix that can be obtained from an identity matrix using one e.r.o is an elementary matrix.  As expected, there are three types of elementary matrices as shown below.
+\end{definition}
+
+\begin{itemize}
+  \item Interchange row \(i\) and \(j\) \begin{equation*} T_{ij}=
+    \begin{pmatrix}
+      1 & & & & &  \\
+      & \ddots& & &\\
+      & & 0 & & 1  & & \\
+      & & & \ddots  & & & \\
+      & & 1 & & 0  & & \\
+      & & & & &  \ddots & \\
+      & & & & & & 1 \\
+    \end{pmatrix}
+  \end{equation*}
+  \item Multiply any row \(i\) by non-zero number \(\alpha\) \begin{equation*} D_i(\alpha)=
+    \begin{pmatrix}
+      1 & & & & &  \\
+      & \ddots & & & & &  \\
+      & & 1 & & & &  \\
+      & & & \alpha & & &  \\
+      & & & & 1 & &  \\
+      & & & & & \ddots &  \\
+      & & & & & & 1 \\
+    \end{pmatrix}
+  \end{equation*}
+  \item Add multiple of row \(j\) by \(\alpha\) to row \(i\) \begin{equation*} L_{ij}(\alpha)=
+    \begin{pmatrix}
+      1 & & & & &  \\
+      & \ddots & & & & &  \\
+      & & 1 & & & &  \\
+      & & & \ddots & & &  \\
+      & & \alpha & & 1 & &  \\
+      & & & & & \ddots &  \\
+      & & & & & & 1 \\
+    \end{pmatrix}
+  \end{equation*}
+  Here \(\alpha\) is at the \(ij\)th entry.
+\end{itemize}
+It is easy to see that left-multiply the matrix represents an elementary row operation, while right-multiply represents an elementary column operation.
+
+\begin{definition}[Square matrix]
+  A matrix is square if the number of row is the same as the number of column. Furthermore, a square matrix is 
+  \begin{itemize}
+    \item upper triangular if \(a_{ij}=0\) for all \(i>j\) (i.e. all elements below the diagonal is 0). Similar for lower triangular.
+    \item diagonal if it is both upper and lower triangular i.e. \(a_{ij}=0\) for all \(i \neq j\).
+  \end{itemize}
+\end{definition}
+
+\begin{definition}[Identity and inverse]
+  The \(n \times n\) identity matrix \(I_n\) is the matrix \([\delta_{ij}]_{n\times n}\) where \(\delta_{ij}\) is the Kronecker delta.\vspace{5pt}
+
+  If for a square matrix \(B\), there exists another matrix \(B^{-1}\) such that \(BB^{-1}=B^{-1}B=I\), then we say \(B\) is invertible, and \(B^{-1}\) is the inverse.\vspace{5pt}
+
+  A matrix that is not invertible is called \emph{singular}.
+\end{definition}
+It is trivial to show that \(AI=IA=A\) for any square matrix \(A\).
+
+\begin{theorem}[Inverse is unique]
+  The inverse of a given matrix is unique, i.e. for \(A,B,C \in M_{n\times n}(\R)\)
+\end{theorem}
+\begin{proof}
+  By definition of inverse and associativity, we have
+  \begin{equation*}
+    B = BI = B(AC) = (BA)C = IC = C
+  \end{equation*}
+\end{proof}
+This argument works exactly the same for \(A \in M_{m\times n}(\mathbb{F})\) and \(B,C \in M_{n\times m}(\mathbb{F})\).
+
+\begin{theorem}[Inverse of product]
+  Suppose \(n\times n\) matrix \(A,B\) are both invertible. Then \(AB\) is invertible, with inverse \(B^{-1}A^{-1}\).
+\end{theorem}
+\begin{proof}
+  \subproof{\(AB\) is invertible}
+  It is trivial to prove by using the fact that `\(A\) is invertible \(\iff \det(A)\neq 0\)' and `\(\det(A)\det(B)=\det(AB)\)' which we shall prove later in the note. 
+
+  \subproof{\((AB)^{-1}=B^{-1}A^{-1}\)}
+  We have \begin{equation*}
+    (AB)(B^{-1}A^{-1})=(A(BB^{-1}))A^{-1}=(AI)A^{-1}=AA^{-1}=I
+  \end{equation*}
+  and similarly for the other way.
+\end{proof}
+
+\begin{definition}[Matrix transpose]
+  If \(A=[a_{ij}]_{m\times n}\), then the transpose of \(A\) is \(A^T=[a_{ji}]_{n\times m}\).
+\end{definition}
+
+\begin{proposition}[][p1]
+  \((AB)^T=B^TA^T\)
+\end{proposition}
+This is trivial. Simply evaluate entries of both sides. 
+
+\begin{proposition}[Inverse of transpose]
+  If square matrix \(A\) is invertible, then \(A^{T}\) is invertible, and \((A^T)^{-1}=(A^{-1})^T\)
+\end{proposition}
+\begin{proof}
+  Use definition of \(I\), \(I = I^T\), and proposition \ref{prop:p1}, we have
+  \begin{itemize}
+    \item \((A^{-1})^TA^T = (AA^{-1})^T = I^T = I\)
+    \item \(A^T(A^{-1})^T = (A^{-1}A)^T = I^T = I\)
+  \end{itemize}
+  Hence \((A^{-1})^T\) is the unique \(A^T\).
+\end{proof}
+
+%----------------------------------------------------
+\subsection{Inverse using row operations}
+\begin{proposition}
+  The inverse of every elementary matrix is also an elementary matrix.
+\end{proposition}
+
+\begin{theorem}
+  If a square matrix can be row reduced to the identity matrix, then it is invertible. 
+\end{theorem}
+\begin{proof}
+  Suppose the matrix \(A\) is row reduced by a series of row operations represented by elementary matrices \(E_1...E_n\). Then \(E_n...E_1A=I\) so \(E_n...E_1=A^{-1}\) as product of elementary matrices is invertible.
+\end{proof}
+
+\begin{algorithm}[Gaussian elimination]
+  This is a sequence of elementary row operations that reduce the matrix to row echelon form. It can be used to solve a linear system or find the rank/determinant/inverse of the matrix. Forward elimination:
+  \begin{enumerate}
+    \item Swap rows so that the first row contains the 'left-est' non-zero entry.
+    \item Make entries below it zero by adding multiple.
+    \item Repeat for all other rows from top to down.
+  \end{enumerate}
+  If the process is continued to row-reduced echelon form, then the algorithm is refers to as \emph{Gauss-Jordan elimination}. Backward substitution:
+  \begin{enumerate}
+    \item Make leading coefficient 1 by scalar multiplication.
+    \item Make entries above 0 by adding multiples, starting from the 2nd row. 
+  \end{enumerate}
+\end{algorithm}
+
+To find the inverse of a matrix, augment the matrix by an identity matrix on the right. Then perform Gaussian elimination to the left matrix (elementary row operations applied to both). The right matrix is the inverse when the left becomes the identity matrix. 
+
+\begin{proposition}[Solutions set based on RREF]
+  An augmented matrix in reduced row echelon form corresponds to a system with 
+  \begin{itemize}
+    \item no solution if the last (augmented) column contains a leading 1
+    \item infinite solution if the system is consistent and the number of columns (excluding augmented) is more than the number of non-zero rows
+    \item unique solution otherwise
+  \end{itemize}  
+\end{proposition}
+
+%=========================================================
+\section{Vector Space}
+\subsection{Space and subspace}
+\begin{definition}[Vector space]
+  Let \(F\) be a field. A vector space \(V\) over \(F\) is a non-empty set with two maps:
+  \begin{itemize}
+    \item Addition \(+:V\times V \to V\)
+    \item Scalar multiplication: \(\cdot:F\times V\to V\)
+  \end{itemize}
+  satisfying the following eight axioms:
+  \begin{itemize}
+    \item Associative addition
+    \item Commutative addition
+    \item Additive identity
+    \item Additive inverse
+    \item Associative multiplication
+    \item Multiplicative identity
+    \item Distributive w.r.t field addition
+    \item Distributive w.r.t vector addition
+  \end{itemize}
+  Elements of \(V\) are vectors and elements of \(F\) are scalars.
+\end{definition}
+Do note that the maps are not the same as the ones defined in the field.
+
+\begin{definition}[Subspace]
+  A subset \(W\) of a vector space \(V\) is a subspace of \(V\) if it is
+  \begin{enumerate}
+    \item not empty
+    \item closed under vector addition
+    \item closed under scalar multiplication
+  \end{enumerate}
+\end{definition}
+
+\begin{proposition}
+  Every subspace of a vector space \(V\) over \(F\) must contain the zero vector.
+\end{proposition}
+
+\begin{definition}
+  Let \(U,W\) be subspaces of a vector space \(V\).
+  \begin{itemize}
+    \item The intersection of \(U,W\) is 
+    \[U \cap W = \{v\in V: v\in U \land v\in W\}\]
+    \item The sum of \(U,W\) is 
+    \[U+W=\{u+w: u\in U,w\in W\}\]
+  \end{itemize}
+\end{definition}
+
+\begin{theorem}
+  If \(U,W\) are subspace of \(V\), then \(U \cap W, U+W\) are subspaces of \(V\).
+\end{theorem}
+
+%----------------------------------------------------
+\subsection{Linear map}
+A system of linear equations in \(n\) unknowns specifies a set in \(n\)-space. We can see \(A\in{M_{m\times n}F}\) as a map \(A:F^n\to F^m\), where \(F\) is a field.
+
+\begin{definition}[Linear map]
+  Let \(V,W\) be vector space over the field \(F\). A function \(f:V\to W\) is a linear map if for any vectors \(\bf{u},\bf{v}\in V, c\in F\), we have
+  \begin{itemize}
+    \item \(f(\bf{u}+\bf{v})=f(\bf{u})+f(\bf{v})\)
+    \item \(f(c\bf{u})=cf(\bf{u})\)
+  \end{itemize}
+  i.e. a linear map preserves vector addition and scalar multiplication.
+\end{definition}
+Linear transformation is another word for linear map.
+\begin{theorem}
+  Any linear map \(T:V\to W\) preserves \(0\) and linear combinations.
+  \[T(0_V)=0_W\]
+  \[T(c_1v_1+...+c_nv_n)=c_1T(v_1)+...+c_nT(v_n)\]
+\end{theorem}
+
+\begin{theorem}[Matrix is linear map]
+  Let \(A\) be a \(m\times n\) matrix, and \(T:F^m\to F^n\) defined by \(T(v)=Av\). Then \(T\) is a linear map. 
+\end{theorem}
+\begin{proof}
+  
+\end{proof}
+
+We can see matrix as a linear map, where it maps the \(i\)th basis vector to the vector in the \(i\)th column. For instance, a rotation anticlockwise by \(\theta\) in \(\R^2\) is represented by 
+\begin{equation*}
+  R_\theta = 
+  \begin{pmatrix}
+    \cos\theta & -\sin\theta\\
+    \sin\theta & \cos\theta
+  \end{pmatrix}
+\end{equation*}
+
+\begin{theorem}
+  Suppose \(V\) be a vector space with basis \(\{v_1,...,v_n\}\), and suppose \(w_1,...,w_n\) be any \(n\) vectors from a vector space \(W\). Then there is a unique linear map \(T:V\to W\) such that \(T(v_i)=w_i\) for all \(i\).
+\end{theorem}
+This shows that once we know what a linear transformation does to a basis we know what the transformation is.
+
+\begin{definition}[Orthogonal matrix]
+  A matrix is orthogonal if \(A^{-1}=A^{T}\)
+\end{definition}
+%inner and outer product
+
+\begin{proposition}
+  An orthogonal matrix preserves inner products.
+\end{proposition}
+
+\subsection{Bases}
+\begin{definition}[Span]
+  Let \(V\) be a vector space over \(F\) and \(S=\{u_1,...,u_n\}\) a set of vectors in \(V\). Then the span of \(S\) is the set of all linear combinations of its elements. 
+  \[Span(u_1,...,u_n)=\left\{\sum_{i=1}^n \alpha_iu_i,\alpha_i\in F\right\}\]
+  If \(Span(S)=V\), then we say \(S\) spans \(V\) or \(S\) is a spanning set of \(V\).
+\end{definition}
+
+To prove \(S\) is spanning, it is sufficient to show that a set of basis of \(V\) can be achieved using elements in \(S\).
+
+Note \(Span(\emptyset)=\{0\}\) the zero vector, and for infinite set \(S\in V\) we still only take the finite sums. 
+
+\begin{exercise}
+  Show that for \(S\) a set of vectors in \(V\), the vector space over \(F\), \(Span(S)\) is a subspace of \(V\), even when \(S\) is infinite.
+\end{exercise}
+\begin{solution}
+  %
+\end{solution}
+
+\begin{definition}[Linear independence]
+  Let \(V\) be a vector space over \(F\). We say \(u_1,...,u_n\in V\) are linearly independent if
+  \[\sum_{i=1}^n\alpha_iu_i=0,\alpha_i\in F \implies \alpha_i=0,\, \forall i\] 
+\end{definition}
+
+\begin{definition}[Basis]
+  Let \(V\) be a vector space. A basis of \(V\) is a linearly independent spanning set of \(V\).
+\end{definition}
+
+\begin{theorem}[Steinitz exchange lemma]
+  Let \(V\) be a vector space. Take \(X\subseteq V\) and suppose \(u \in Span(X)\) but \(u \notin Span(X\backslash{v})\) for some \(v\in X\). Let \(Y = (X \backslash {v}) \cup {u}\) (i.e. we exchange \(v\) for \(u\)). Then \(Span(X) = Span(Y)\).
+\end{theorem}
+\begin{proof}
+  %
+\end{proof}
+\begin{theorem}
+  Suppose \(U\) is a linearly independent set of \(V\) and \(W\) a spanning set of \(V\) . Then 
+  \[|U|\leq |W|\]
+\end{theorem}
+\begin{corollary}
+  All bases for a finite-dimensional vector space have the same number of elements.
+\end{corollary}
+
+This then allows us to define dimension as follows.
+\begin{definition}[Dimension]
+  The dimension of a vector space \(V\), \(\dim V\), is the size of any basis of \(V\). 
+
+  We say \(V\) is finite-dimensional if its dimension is finite.
+\end{definition}
+
+\begin{extension}{Zorn's lemma}
+  
+\end{extension}
+
+\begin{exercise}
+  Consider \(E_{ij}\) the \(3\times 3\) matrix with entry 1 at row \(i\) column \(j\), and 0 anywhere else. This is clearly a basis of all \(3\times 3\) matrices. The commutator is
+  \[[A,B]=AB-BA\]
+  Determine the dimension of the subspace span by \([E_{ij},E_{kl}],i,j,k,l\in\{1,2,3\}\). What about for arbitrary \([A,B]\)?
+\end{exercise}
+\begin{solution}
+  After some algebra, we see that \(E_{ij}E_{kl} = E_{il}\) if \(j=k, i\neq l\), and \(0\) otherwise. It follows that all \(E_{ab}\) where \(a\neq b\) can be achieved with \([E_{ij},E_{kl}]\), giving 6 basis. It also follows that \([E_{ij},E_{kl}]=E_{aa}-E_{bb}\) for \(a,b\in\{1,2,3\}\). But these 3 are not linearly independent: we can combine any 2 of these to get the last one. Hence this only gives 2 basis. The other 2 gives no more basis: \(i\neq l,j\neq k\) simply gives \(0\), and \(i=l,j\neq k\) gives \(-E_{ab},a\neq b\), which has been considered already. The dimension is 8.
+
+  \vspace{5pt}The dimension is in fact 8 for commutator of two arbitrary 3x3 matrices too. Intuitively, we can express \(A,B\) as a linear combinations of \(E_{ij}\) the basis, distribute and regroup them to get a linear combination of \([E_{ij},E_{kl}]\). This is true because we can show that \([A,B]\) is a bilinear form, preserves linear combination in both arguments.
+\end{solution}
+
+\begin{theorem}
+  Let \(V\) be a vector space over \(F\), and \(U,W\) subspaces of \(V\). Then
+  \[\dim(U+W)=\dim(U)+\dim(W)-\dim(U\cap W)\]
+\end{theorem}
+
+\subsection{Rank and Nullity}
+\begin{definition}[Row space ans Column space]
+  Let \(A\) be a \(m\times n\) matrix. The row space of \(A\), \(RSp(A)\) is the span of its row vectors and the column space \(CSp(A)\) is the span of its column vectors.
+\end{definition}
+
+\begin{proposition}
+  For any matrix \(A\), \(\dim(RSp(A))\) is the number of non-zero rows in the echelon form of \(A\). 
+\end{proposition}
+
+\begin{theorem}
+  For any matrix \(A\), we have \(\dim(RSp(A))=\dim(CSp(A))\).
+\end{theorem}
+
+\begin{definition}[Rank]
+  We define the rank of a matrix as the dimension of its row (or column) space.
+\end{definition}
+
+\begin{proposition}
+  For a \(n\times n\) matrix \(A\), the following statements are equivalent: 
+  \begin{itemize}
+    \item \(A\) has a full rank (\(\rank(A)=n\))
+    \item the row vectors of \(A\) forms a basis in \(F^n\)
+    \item \(A\) is invertible
+  \end{itemize}
+\end{proposition}
+
+\begin{definition}[Image and Kernel]
+  Let \(T:V\to W\) be a linear map. Then define
+  \begin{itemize}
+    \item \(\Im T=\{T(v)\in W:v\in V\}\)
+    \item \(\rm{Ker}\,T=\{v\in V: T(v)=0_W\}\)
+  \end{itemize}
+\end{definition}
+
+\begin{proposition}
+  For \(T:V\to W\) a linear map, \(\Im T\) is a subspace of \(W\), \(\rm{Ker}\,T\) is a subspace of \(V\).
+\end{proposition}
+
+The dimension of the kernel of \(T\) is called the \emph{nullity} of \(T\).
+
+\begin{proposition}
+  Let \(T:V\to W\) be a linear map. Suppose that \(\{v_1, ..., v_n\}\) is a basis for \(V\). Then \(\Im T = Span({T(v_1), .., T(v_n)})\).
+\end{proposition}
+
+\begin{remark}
+  We have therefore that for any matrix \(A\) and \(T(v)=Av\), the kernel is the solution space of \(Av=0\) and the image is the column space of \(A\).
+\end{remark}
+
+\begin{theorem}[Rank-Nullity Theorem]
+  For a linear transformation \(T\), we have
+  \[\dim(T)=\dim(\Im T)+\dim(\rm{Ker}\, T)\]
+\end{theorem}
+If \(T\) is a \(n\times n\) matrix, then \(\dim(T)=n\).%TODO
+
+\subsection{Change of basis}
+In this section, the vector space we discussed are all finite dimensional unless stated explicitly (although most theorems apply to infinite dimensional vector space too).
+
+\begin{notation}
+  Suppose \(B=\{v_1,...,v_n\}\) is a basis of some vector space. Then we denote \([v]_B\) as a column vector of \(\{\alpha_1,...,\alpha_n\}\) where \(v=\sum_{i=1}^{n}\alpha_iv_i\).
+\end{notation}
+
+
+\begin{definition}[Matrix of a linear map]
+  Suppose \(V,W\) are vector spaces with bases \(B=\{v_1,...,v_m\},C=\{w_1,...,w_n\}\). Let \(\varphi:V\to W\) be a linear map. Then the linear map \(T:F^m\to F^n\) can be represented by a \(n\times m\) matrix is given by
+  \[{}_C[\varphi]_B = ([\varphi(v_1)]_C\:|\:[\varphi(v_2)]_C\:|\:...\:|\:[\varphi(v_m)]_C)\]
+\end{definition}
+Note that linear map is another word for linear transformation.
+
+\begin{theorem}
+  With \(B,C,\varphi\) defined as above, we have 
+  \[[\varphi(v)]_C={}_C[\varphi]_B\,[v]_B\]
+\end{theorem}
+
+\begin{remark}
+  Geometrically, the matrix \({}_C[\varphi]_B\) transforms \(C\)'s grid into \(B\)'s grid (as in the \(i\)th basis vector in \(B\) is mapped to the vector in the \(i\)th column of the matrix). But in doing so it translates (a vector) in \(B\)'s laguange into \(C\)'s by right-multiplying.
+\end{remark}
+
+\begin{theorem}
+  Suppose \(U\) is another vector space with basis \(D\), and \(\psi:W\to U\) a linear map, then
+  \[{}_D[\psi \circ \varphi]_B = {}_D[\psi]_C{}_C[\varphi]_B\]
+\end{theorem}
+
+\begin{definition}[Change of basis matrix]
+  Suppose \(B=\{v_1,...,v_n\},C=\{w_1,...,w_n\}\) are now two different bases of the same vector space \(V\). Then the basis change matrix from \(B\)'s language to \(C\)'s language is given by
+  \[{}_C[id]_B=([v_1]_C\:|\:[v_2]_C\:|\:...\:|\:[v_n]_C)\]
+  where \(id:V\to V\) is the identity map, \(id(v)=v\) for all \(v\in V\). 
+\end{definition}
+In other words, the \(i\)th column of \({}_C[\varphi]_B\) is the \(i\)th basis vector of \(B\) written in \(C\)'s language (with respect to \(C\)): as a linear combination of basis vectors in \(C\).
+
+Clearly, \({}_C[id]_B=({}_B[id]_C)^{-1}\) as they multiply together to give the identity matrix.
+
+\begin{theorem}
+  Let \(P:={}_B[id]_C\) where \(B,C\) are defined above. Then for any linear map \(\varphi:V\to V\) (a matrix), we have 
+  \[{}_C[\varphi]_C={}_C[id]_B\,{}_B[\varphi]_B\,{}_B[id]_C=P^{-1} {}_B[\varphi]_B P\]
+\end{theorem}
+Here \({}_C[\varphi]_C\) just means the matrix \(A\) written in \(C\)'s language. This works as the equality under right multiplcation of any vectors written in \(C\)'s language: \([v]_C\). Hence the formula above translates a matrix written in \(B\) to the same matrix written in \(C\).
+
+\begin{exercise}
+  Consider \(U\) the canonical basis of \(\R^3\) and \(V=\{v_1,v_2,v_3,v_4\}\) a basis of \(\R^4\):
+  \[v_1=\begin{pmatrix}1\\1\\0\\0\end{pmatrix}, v_2=\begin{pmatrix}1\\0\\1\\0\end{pmatrix}, v_3=\begin{pmatrix}1\\0\\0\\1\end{pmatrix}, v_4=\begin{pmatrix}1\\0\\0\\0\end{pmatrix}\]
+  A linear transformation \(T:\R^3\to\R^4\) (you can verify) is given by
+  \[T\begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix}=\begin{pmatrix}x_2+x_3\\x_1\\5x_1+7x_3\\3x_1-2x_2\end{pmatrix}\]
+  Find \({}_V[T]_U\).
+\end{exercise}
+\begin{solution}
+  Note \[T(u_1)=T\begin{pmatrix}1\\0\\0\end{pmatrix}=\begin{pmatrix}0\\1\\5\\3\end{pmatrix}=v_1+5v_2+3v_3-9v_4=[T(u_1)]_V\]
+  Repeat with \(u_2,u_3\), we have
+  \[{}_V[T]_U=\begin{pmatrix}1&0&0\\5&0&7\\3&-2&0\\-9&3&-6\end{pmatrix}\]
+\end{solution}
+\section{Determinant}
+Let \(A\in M_n(F)\) denote \(A\) is a \(n\times n\) matrix with entries in \(F\).
+\subsection{Definition and properties}
+\begin{definition}[Minor matrix]
+  Let \(A\in M_n(F)\). The \(ij\) minor matrix \(A_{ij}\) is defined as the \((n-1)\times(n-1)\) matrix obtained by deleting the \(i\)th row and the \(j\)th column from \(A\).
+\end{definition}
+
+\begin{definition}[Determinant]
+  Let \(A\in M_n(F)\). The determinant of \(A\), \(\det(A)\), is defined inductively by
+  \begin{itemize}
+    \item Base case \(n=1, \det(A)=a_11\)
+    \item Given the determinant for \((k-1)\times(k-1)\) matrix, we have for \(n=k\),
+    \[\det(A)=\sum_{j=1}^{k}(-1)^{j+1}a_{1j}\det(A_{1j})\]
+  \end{itemize} 
+\end{definition}
+Note that \(a_ij\) is the entry of \(A\) at \(i\)th row \(j\)th column. This definition is sometimes called the Laplace expansion.
+
+
+\begin{problem}
+  Show that the rank of a matrix \(A\) is the largest \(m\) such that \(A\) has an \(m\times m\) submatrix with non-zero determinant.
+\end{problem}
+
+We now discuss how the determinant changes under elementary row operations, which would make our calculation easier.
+\begin{proposition}
+  Let \(A\in M_n(F)\), \(\alpha\in\R\), and \(1\leq l \leq n\).
+  \begin{itemize}
+    \item (Taking out factor) Suppose \(D\) is the matrix obtained by multiplying the \(l\)th row of \(A\) by \(\alpha\). Then,
+    \[\det(D)=\alpha\det(A)\]
+    \item (Linearity on rows) Suppose \(A,B,C\) are the same except the \(l\)th row where the \(l\)th row of \(C\) is the sum of the \(l\)th rows of \(A\) and \(B\). Then,
+    \[\det(C)=\det(A)+\det(B)\]
+    \item  (Identical consecutive rows) Suppose \(l\neq n\) and the \(l\)th and \((l+1)\)th row of \(A\) are the same. Then,
+    \[\det(A)=0\]
+  \end{itemize}
+\end{proposition}
+
+\begin{theorem}[Determinant under e.r.o.]
+  Let \(A,B\in M_n(F)\)., \(\alpha\in\R\), and \(1\leq i,j\leq n\), \(i\neq j\).
+  \begin{itemize}
+    \item If \(A\) has two rows equal, then \(\det(A)=0\).
+    \item If \(B\) is obtained by interchanging two rows of \(A\), then \(\det(B)=-\det(A)\).
+    \item If \(B\) is obtained by adding \(\alpha\) times row \(i\) to row \(j\) of \(A\), then \(\det(B)=\det(A)\).
+  \end{itemize}
+  It follows immidiately that \(\det(B)=\beta\det(A)\) for some \(\beta\) if \(A,B\) are row-equivalent.
+\end{theorem}
+
+\begin{theorem}[Determinant of identity]
+  The identity matrix \(I_n\) has determinant 1 for all \(n\in\N\).
+\end{theorem}
+
+\begin{remark}
+  Our definition of determinant naturally lends itself to induction, so the majority of proof about it relies on induction.
+\end{remark}
+
+\begin{definition}[Singular matrix]
+  A \(n\times n\) matrix is said to be singular if there is a non-zero \(v\in\R^n\) such that \(Av=0\).
+\end{definition}
+
+\begin{theorem}
+  Let \(A\in M_n(F)\). The following are equivalent:
+  \begin{itemize}
+    \item \(A\) is invertible
+    \item \(A\) is non-singular
+    \item \(A\) has a full rank
+    \item \(A\) is row-equivalent to \(I_n\)
+    \item \(\det(A)\neq 0\)
+  \end{itemize}
+\end{theorem}
+
+It can also be shown that we may compute the determinant by expanding along any rows or columns using the following alternating pattern:
+\[\begin{pmatrix}
+  +&-&+&-&...\\
+  -&+&-&+&...\\
+  +&-&+&-&...\\
+  \vdots&&&&...\\
+\end{pmatrix}\]
+
+We now prove an important property of determinant.
+\begin{theorem}[Determinant is multipliactive]
+  Let \(A,B\in M_n(F)\). Then,
+  \[\det(AB)=\det(A)\det(B)\]
+\end{theorem}
+\begin{proof}
+  Use row-equivalence to \(I_n\) for the singular case.
+\end{proof}
+
+\begin{theorem}[Determinant of transpose]
+  Suppose \(A\in M_n(F)\). Then,
+  \[\det(A)=\det(A^T)\]
+\end{theorem}
+
+\begin{problem}[Vandermonde determinant and Lagrange]
+  Let \(n\geq 2\) and \(x_1,...,x_n\in F\). Show that the Vandermonde determinant is
+  \[\det\begin{pmatrix}
+    1&x_1&x_1^2&...&x_1^{n-1}\\
+    1&x_2&x_2^2&...&x_2^{n-1}\\
+    \vdots&\vdots&\vdots&\vdots&\vdots\\
+    1&x_n&x_n^2&...&x_n^{n-1}\\
+  \end{pmatrix}=\prod_{1\leq i<j\leq n}(x_j-x_i)\]
+  Thus show that a polynomial of degree \((n-1)\) has at most \((n-1)\) distinct roots.
+\end{problem}
+
+\begin{extension}{Permanent of a matrix}
+  What happens if you miss out the alternating signs in the definition of the determinant? It turns out that you obtain a mathematical object called permanent. The permanent, as well as the determinant, is a polynomial in the entries of the matrix. Both are special cases of a more general function of a matrix called the immanant.
+\end{extension}
+
+\subsection{Inverse using determinant}
+\begin{definition}[Cofactor]
+  Let \(A=(a_{ij})\in M_n(F)\), \(1\leq i,j\leq n\). The \(ij\)th cofactor of \(A\) is
+  \[c_{ij}=(-1)^{i+j}\det(A_{ij})\]
+  Then, \(C=(c_{ij})\in M_n(F)\) is the cofactor matrix of \(A\). 
+\end{definition}
+\begin{theorem}[Inverse using determinant]
+  Let \(A\in M_n(F)\) and \(C\) its cofactor matrix. Then, \(C^TA=\det(A)I_n\). In particular, if \(\det(A)\neq 0\), we have
+  \[A^{-1}=\frac{1}{\det(A)}C^T\]
+\end{theorem}
+\begin{notation}
+  Note that \(C^T\) is sometimes called the adjugate matrix of \(A\), denoted as \(adj(A)\).
+\end{notation}
+This is not a particularly efficient way of computing inverse for large matrices, but it does have nice theoretical consequences.
+
+\begin{theorem}[Cramer's rule]
+  Let \(A\in M_n(F)\) and \(b=(b_1,...,b_n)^T\in F^n\). If \(A\) is invertible, then there is a unique solution \(x=(x_1,...,x_n)^T\) to the equation \(Ax=b\). For \(1\leq i\leq n\), let \(A_i\) be the result of replacing the \(i\)th column of \(A\) by \(b\), then
+  \[x_i=\frac{\det(A_i)}{\det(A)}\]
+\end{theorem}
+\subsection{Determinant of linear maps}
+\begin{theorem}
+  Let \(V\) be a finite dimensional vector space and \(T:V\to V\) a linear map. Let \(B,C\) be two arbitrary different bases of \(V\). Then,
+  \[\det([T]_B)=\det([T]_C)\]
+  That is, the determinant \(\det(T)\) does not depend on the choice of the basis.
+\end{theorem}
+
+\begin{extension}{Resultant}
+  
+\end{extension}
+
+\section{Eigenvalue and Eigenvector}
+Note that all our definition and theorem here about matrices also work for linear map (up to any basis).
+\subsection{Characteristic polynomial}
+\begin{definition}[Eigenvalue and eigenvector]
+  Let \(A\in M_n(F)\). We say that \(\lambda\in F\) is an eigenvalue of \(A\) if there is a non-zero vector \(v\) such that \(Av=\lambda v\). Such a vector \(v\) is called an eigenvector of \(A\) with eigenvalue \(\lambda\).
+\end{definition}
+
+\begin{definition}[Characteristic polynomial]
+  Let \(A\in M_n(F)\). The characteristic polynomial is defined as 
+  \[\chi_A(x)=\det(xI_n-A)\]
+\end{definition}
+Similar for a linear map (with basis \(B\)).
+
+\begin{theorem}
+  Let \(A\in M_n(F)\) and \(\lambda\in F\). Then, \(\lambda\) is an eigenvalue of \(A\) if and only if \(\chi_A(\lambda)=0\).
+\end{theorem}
+
+\begin{definition}[Trace]
+  Let \(A\in M_n(F)\). The trace of \(A\) is the sum of its diagonal terms:
+  \[\tr(A)=\sum_{i=1}^{n}a_{ii}\]
+\end{definition}
+\begin{theorem}
+  Let \(A,B\in M_n(F)\). We have 
+  \begin{itemize}
+    \item \(\tr(A+B)=\tr(A)+\tr(B)\)
+    \item \(\tr(AB)=\tr(BA)\)
+  \end{itemize}
+\end{theorem}
+
+\begin{problem}[Determinant of characteristic polynomial]
+  For \(A\in M_n(F)\), the characteristic polynomial of \(A\) is \(\det(xI_n-A)\). Show that
+  \begin{enumerate}
+    \item The polynomial has degree \(n\)
+    \item The coefficient of \(x^n\) is 1
+    \item The constant term is \((-1)^n\det(A)\)
+    \item The coefficient of \(x^{n-1}\) is \(-\tr(A)\)
+  \end{enumerate}
+  Show also that the characteristic polynomial of
+  \[B=\begin{pmatrix}
+    0&0&0&...&0&-a_0\\
+    1&0&0&...&0&-a_1\\
+    0&1&0&...&0&-a_2\\
+    &&&...&&\\
+    0&0&0&...&1&-a_{n-1}\\
+  \end{pmatrix}\]
+  is the polynomial \(x^n+a_{n-1}x^{n-1}+...+a_1x+a_0\), where all \(a_i\in F\).
+\end{problem}
+\subsection{Diagonalisation}
+
+\section{Inner product}
+
+%=========================================================
+\pagebreak
+\part{Groups}
+
+\end{document}

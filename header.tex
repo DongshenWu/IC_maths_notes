@@ -1,0 +1,153 @@
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{fancyhdr}
+\usepackage{xparse, xpatch}
+\usepackage[svgnames]{xcolor}
+\usepackage[shortlabels]{enumitem}
+\usepackage[thinc,text]{esdiff}
+\usepackage[bottom]{footmisc}
+\usepackage[most]{tcolorbox}
+\usepackage{physics}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{graphicx, tabularx, caption}
+\usepackage{csquotes}
+\usepackage[a4paper, left=1.2in, right=1.2in, bottom=1in]{geometry}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{
+    colorlinks,
+    allcolors=black
+}
+\pgfplotsset{compat=1.18}
+\graphicspath{{./images/}}
+
+% meta
+\setlength{\headheight}{13.6pt}
+\renewcommand*\contentsname{Outline}
+\pagestyle{fancy}
+\lhead{\nouppercase{\leftmark{}}}
+\rhead{\nshort}
+\title{\textbf{\ncourse}}
+\author{Lectured by \nlecturer \\\small Notes taken by Dongshen Wu\footnote{These notes are usually modified significantly after lectures, and are not endorsed by the lecturers at Imperial College, London. They are by no means an accurate representations of what was actually lectured. In particular, all errors are almost surely mine.}}
+\date{\nterm \nyear}
+
+% centre tikz pictures
+\makeatletter
+\g@addto@macro\@floatboxreset\centering
+\makeatother
+
+% environment
+\tcbset{
+  defstyle/.style={
+    enhanced, sharp corners,
+    attach boxed title to top left={yshift=-2.75mm, 
+      xshift=5mm, yshifttext=-2.2mm},
+    colback=white, colframe=PeachPuff,
+    coltitle=black, fonttitle=\bfseries,
+    before skip=7pt,
+    boxed title style={sharp corners, size=small,
+      colback=PeachPuff,colframe=PeachPuff,}},
+  thmstyle/.style={
+    enhanced, sharp corners,
+    attach boxed title to top left={yshift=-2.75mm, 
+      xshift=5mm, yshifttext=-2.2mm},
+    colback=AliceBlue, colframe=LightBlue,
+    coltitle=black, fonttitle=\bfseries,
+    before skip=7pt,
+    boxed title style={sharp corners, size=small,
+      colback=LightBlue,colframe=LightBlue,}},
+  propstyle/.style={
+    enhanced, sharp corners,
+    attach boxed title to top left={yshift=-2.75mm, 
+      xshift=5mm, yshifttext=-2.2mm},
+    colback=white, colframe=PowderBlue,
+    coltitle=black, fonttitle=\bfseries,
+    before skip=7pt,
+    boxed title style={sharp corners, size=small,
+      colback=PowderBlue,colframe=PowderBlue,}},
+}
+
+\newtcbtheorem[number within=section]{TcbThm}{Theorem}{
+  thmstyle}{thm}
+\NewDocumentEnvironment{theorem}{ O{} O{} }
+  {\TcbThm{#1}{#2}}{\endTcbThm}
+
+\newtcbtheorem[number within=section, use counter from=TcbThm]{TcbProp}{Proposition}{
+  propstyle}{prop}
+\NewDocumentEnvironment{proposition}{ O{} O{} }
+  {\TcbProp{#1}{#2}}{\endTcbProp}
+
+\newtcbtheorem[number within=section,use counter from=TcbThm]{TcbDef}{Definition}{
+  defstyle}{def}
+\NewDocumentEnvironment{definition}{ O{} O{} }
+  {\TcbDef{#1}{#2}}{\endTcbDef}
+
+\newtcbtheorem[number within=section,use counter from=TcbThm]{TcbAxi}{Axiom}{
+  defstyle}{axi}
+\NewDocumentEnvironment{axiom}{ O{} O{} }
+  {\TcbAxi{#1}{#2}}{\endTcbAxi}
+
+\newtheorem{corollary}[\tcbcounter]{Corollary}
+\tcolorboxenvironment{corollary}{propstyle}
+\newtheorem{lemma}[\tcbcounter]{Lemma}
+\tcolorboxenvironment{lemma}{propstyle}
+
+\theoremstyle{definition}
+\newtheorem*{example}{Example}
+\newtheorem*{exercise}{Exercise}
+\newtheorem{problem}{Problem}
+\newtheorem*{algorithm}{Algorithm}
+\newtheorem*{procedure}{Procedure}
+\newtheorem*{remark}{Remark}
+\tcolorboxenvironment{algorithm}{propstyle}
+
+\theoremstyle{remark}
+\newtheorem*{notation}{Notation}
+\newtheorem*{solution}{Solution}
+\tcolorboxenvironment{solution}{
+  blanker,breakable,left=5mm,
+  before skip=10pt,after skip=10pt,
+  parbox = false,
+  borderline west={0.5mm}{0pt}{SlateGray}}
+\tcolorboxenvironment{proof}{
+  blanker,breakable,left=5mm,
+  before skip=10pt,after skip=10pt,
+  parbox = false,
+  borderline west={0.5mm}{0pt}{SlateGray}}
+
+\newtcolorbox{extension}[1]{
+  colback=WhiteSmoke,colframe=Gainsboro, enhanced, before skip=10pt, after skip=10pt, fonttitle=\bfseries,coltitle=black, sharp corners, title={\:\,Extension:\:#1}, before upper app={\setlength{\parindent}{17pt}}
+}
+
+% subproof
+\makeatletter
+\newcounter{subproof}
+\xpretocmd{\proof}{\setcounter{subproof}{0}}{}{}
+\xpretocmd{\solution}{\setcounter{subproof}{0}}{}{}
+\newcommand{\subproof}[1]{%
+  \par
+  \addvspace{\medskipamount}%
+  \stepcounter{subproof}%
+  \noindent\emph{Part \thesubproof: #1}\par\nobreak
+  \@afterheading
+}
+\makeatother
+
+% command
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\renewcommand{\bf}[1]{\mathbf{#1}}
+\renewcommand{\cal}[1]{\mathcal{#1}}
+\renewcommand{\rm}[1]{\mathrm{#1}}
+\newcommand{\floor}[1]{\left \lfloor #1 \right \rfloor}
+\newcommand{\ceil}[1]{\left \lceil #1 \right \rceil}
+\newcommand{\lointerval}[1]{\ensuremath{\left(#1\right]}}
+\newcommand{\rointerval}[1]{\ensuremath{\left[#1\right)}}
+% Augmented Matrix
+\newenvironment{amatrix}[1]{%
+  \left(\begin{array}{@{}*{#1}{c}|c@{}}
+}{%
+  \end{array}\right)
+}
