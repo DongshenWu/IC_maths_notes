@@ -22,4 +22,5 @@ All notes are still in the process of writing. The following are the courses I a
 
 Here is a preview of the style of these notes. I am also trying to learn *Makefile*.
 
-[![A preview of the style of these notes](https://i.postimg.cc/XNshSNxr/Preview.png)](https://postimg.cc/RqnGwBkm)
+
+![A preview of the style of these notes](https://drive.google.com/uc?export=view&id=1dQdNi2mGC9L74lmkmrIgT1t7CVKdgSzJ)
